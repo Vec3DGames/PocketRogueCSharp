@@ -7,14 +7,18 @@ namespace PocketRogue
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class PocketRogue : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+        public PocketRogue()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+
+            };
+
             Content.RootDirectory = "Content";
         }
 
