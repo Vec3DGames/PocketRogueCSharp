@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Gui;
+using MonoGame.Extended.ViewportAdapters;
+using PocketRogue.Screens;
+using PocketRogue.States;
 
 namespace PocketRogue
 {
@@ -9,8 +13,13 @@ namespace PocketRogue
     /// </summary>
     public class PocketRogue : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public GraphicsDeviceManager graphics;
+        public SpriteBatch spriteBatch;
+        public ViewportAdapter ViewportAdapter { get; private set; }
+
+        private GuiSystem guiSystem;
+
+        private PocketRogueState currentState;
 
         public PocketRogue()
         {
@@ -45,6 +54,15 @@ namespace PocketRogue
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            ViewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
+
+            var skin = GuiSkin.FromFile(Content, @"Raw/adventure-gui-skin.json");
+            var guiRenderer = new GuiSpriteBatchRenderer(GraphicsDevice, ViewportAdapter.GetScaleMatrix);
+
+            guiSystem = new GuiSystem(ViewportAdapter, guiRenderer)
+            {
+                Screen = new MenuScreen(this, skin)
+            };
         }
 
         /// <summary>
@@ -67,6 +85,8 @@ namespace PocketRogue
                 Exit();
 
             // TODO: Add your update logic here
+            guiSystem.Update(gameTime);
+            //currentState.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -82,6 +102,9 @@ namespace PocketRogue
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+
+            guiSystem.Draw(gameTime);
+            //currentState.Draw(gameTime);
         }
     }
 }
